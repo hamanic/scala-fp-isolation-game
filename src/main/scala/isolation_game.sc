@@ -1,4 +1,5 @@
 import scala.collection.immutable.ArraySeq
+import scala.io.StdIn.readInt
 import scala.math._
 
 //def initBoard (x:Int, y:Int) : Array[Array[Any]] = {
@@ -31,7 +32,7 @@ def initBoard (x:Int, y:Int) : ArraySeq[ArraySeq[Any]] = {
     val posB = (0,y/2)
   }
 
-  val board = ArraySeq.tabulate(x, y){
+  val board = ArraySeq.tabulate(rows, cols){
     case (a, b) =>
       if(y%2 == 0) {
         if(a == 0 && b == ceil(y/2).toInt){
@@ -64,8 +65,6 @@ def initBoard (x:Int, y:Int) : ArraySeq[ArraySeq[Any]] = {
   return board
 }
 
-val board = initBoard(8,6)
-
 def display(board:ArraySeq[ArraySeq[Any]]): Unit ={
   println(".  "+List.range(0, board(0).size).mkString("   "))
   println(".  "+List.fill(board(0).size)("_").mkString("   "))
@@ -73,17 +72,27 @@ def display(board:ArraySeq[ArraySeq[Any]]): Unit ={
   board.zipWithIndex.foreach{ case(row, i) => println(i+" |"+row.mkString("   "));}
 }
 
+def move(board:ArraySeq[ArraySeq[Any]], player:String, to : Unit => (Int,Int) ) : ArraySeq[ArraySeq[Any]]={
+  return board
+}
+
+
+def remove_cell(board:ArraySeq[ArraySeq[Any]], cell : Unit => (Int,Int)) : ArraySeq[ArraySeq[Any]]={
+  return board
+}
+
+
+def pos(): (Int,Int) = {
+  println("Column : ")
+  var x = readInt()
+  print("Column : ")
+  val y: Int = readInt()
+  return (x,y)
+}
+
+val board = initBoard(8,6)
 display(board)
-//
-//def move(player:String, pos:Int) : Array[Array[String]]={
-//  if(turn == 2){
-//    println("select board position to remove")
-//    return Unit
-//  }
-//  else{
-//    println("Select position to move")
-//  }
-//}
+
 //
 //def win(b:List[List[Any]]): Boolean ={
 //
@@ -98,10 +107,6 @@ display(board)
 //  play()
 //}
 
-
-
+//val x = pos()
 //val Board = ArraySeq.fill(8,6)(1)
 //val Board2 = Board.updated(0, Board(0).updated(0, "B"))
-
-
-
