@@ -83,9 +83,9 @@ def remove_cell(board:ArraySeq[ArraySeq[Any]], cell : Unit => (Int,Int)) : Array
 
 
 def pos(): (Int,Int) = {
-  println("Column : ")
+  println("Row : ")
   var x = readInt()
-  print("Column : ")
+  println("Column : ")
   val y: Int = readInt()
   return (x,y)
 }
