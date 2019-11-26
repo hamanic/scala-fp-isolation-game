@@ -1,34 +1,25 @@
 package scala
 
 import java.io._
-import scala.collection.immutable.{ArraySeq, Vector}
+import scala.collection.immutable.{ArraySeq, Map}
 import scala.io.StdIn.readLine
 import scala.math.{ceil, floor}
 
 object isolation_game {
   def main(args:Array[String]): Unit ={
 
-    def initBoard (x:Int, y:Int) : ArraySeq[ArraySeq[Any]] = {
-      val rows = x //8 rows
-      val cols = y //6 cols
+    def initBoard (dim:(Int, Int)) : (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)]) = {
+      val x = dim._1 //8 rows
+      val y = dim._2 //6 cols
 
-      if(y%2 == 0) {
-        val posA = (x-1,floor(y/2).toInt-1)
-        val posB = (0,ceil(y/2).toInt)
-      }
-      else{
-        val posA = (x-1,y/2)
-        val posB = (0,y/2)
-      }
-
-      val board = ArraySeq.tabulate(rows, cols){
+      val board = ArraySeq.tabulate(x, y){
         case (a, b) =>
           if(y%2 == 0) {
-            if(a == 0 && b == ceil(y/2).toInt){
+            if(a == 0 && b == y/2){
               "B"
             }
             else{
-              if(a == x-1 && b == floor(y/2).toInt-1){
+              if(a == x-1 && b == (y/2)-1){
                 "A"
               }
               else{
@@ -51,7 +42,14 @@ object isolation_game {
           }
 
       }
-      return board
+      if(y%2 == 0) {
+        val players = Map("A" -> (x-1,floor(y/2).toInt-1), "B" -> (0,ceil(y/2).toInt))
+        return (board,players)
+      }
+      else{
+        val players = Map("A" -> (x-1,y/2), "B" -> (0,y/2))
+        return (board,players)
+      }
     }
     def display(board:ArraySeq[ArraySeq[Any]]): Unit ={
       println(".  "+List.range(0, board(0).size).mkString("   "))
@@ -87,9 +85,29 @@ object isolation_game {
       }
     }
 
-    val (x,y) = pos("[4-9]")
-    val board = initBoard(x,y)
+    val (board,players) = initBoard(pos("[4-9]"))
+    println(players)
     display(board)
     display(remove_cell(board))
+
+//    def play(board:ArraySeq[ArraySeq[Any]],players: Map[String,(Int, Int)]): Unit = {
+//      if(check_win()){ print("end") return Unit}
+//      else{
+//          board_moveA = move(board,playerA))
+//          display(board_moveA)
+//          board_removeA = remove_cell(board_moveA))
+//          display(board_removeA)
+
+//          board_moveB = move(board_removeA,playerA))
+//          display(board_moveB)
+//          board_removeB = remove_cell(board_moveB))
+//          display(board_removeB)
+
+//          play(board_removeB,players)
+//      }
+//    }
+//      def move(board:ArraySeq[ArraySeq[Any]], posPlayer: (Int,Int)): ArraySeq[ArraySeq[Any]]={
+//
+//    }
   }
 }
