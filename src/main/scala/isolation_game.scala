@@ -121,10 +121,10 @@ object isolation_game {
     def check_move(board: ArraySeq[ArraySeq[Any]], players: Map[String, (Int, Int)], player: String): Unit = {
       val x = players(player)._1
       val y = players(player)._2
-      var bound_moves = ListBuffer[Any]()
+      val bound_moves = ListBuffer[Any]()
       for(i <- -1 to 1) {
         for(j <- -1 to 1){
-          if( (x+i > -1) && (x+i <= board.length-1) && (y+j > -1) && (y+j <= board(0).length-1) ){
+          if( (x+i > -1) && (x+i < board.length) && (y+j > -1) && (y+j < board(0).length) ){
             //print(i,j,x,y,x+i,y+j)
             bound_moves += board(x+i)(y+j)
           }
