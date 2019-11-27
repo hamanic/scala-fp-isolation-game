@@ -75,7 +75,7 @@ object isolation_game {
 
     }
     def remove_cell(board:ArraySeq[ArraySeq[Any]]) : ArraySeq[ArraySeq[Any]]={
-      val (x,y) = pos("[0-9]")
+      val (x,y) = pos(limits="[0-9]")
       if(board(x)(y) != 1 ){
         print("Invalid cell selected\n")
         remove_cell(board)
@@ -85,29 +85,54 @@ object isolation_game {
       }
     }
 
-    val (board,players) = initBoard(pos("[4-9]"))
+    def move(board:ArraySeq[ArraySeq[Any]], players:Map[String,(Int, Int)], player:String): (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)])={
+      val (x,y) = pos(limits="[0-9]")
+      if(board(x)(y) != 1){
+        print("Invalid cell to move selected\n")
+        move(board,players,player)
+      }
+      else{
+        if(player=="A" && (players("A")._1-x <= 1 || players("A")._1-x >= -1) && (players("A")._2-y <= 1 || players("A")._2-y >= -1)){
+          val players_updated = Map("A" -> (x,y), "B" -> players("B"))
+          return (board.updated(x, board(x).updated(y, player)),players_updated)
+        }
+        else{
+          if(player=="A" && (players("B")._1-x <= 1 || players("B")._1-x >= -1) && (players("B")._2-y <= 1 || players("B")._2-y >= -1)){
+            val players_updated = Map("A" -> players("A"), "B" -> (x,y))
+            return (board.updated(x, board(x).updated(y, player)),players_updated)
+          }
+          else{
+            print("Invalid player selected in move()")
+            move(board,players,player)
+          }
+        }
+      }
+    }
+
+    val (board,players) = initBoard(pos(limits="[4-9]"))
     println(players)
     display(board)
     display(remove_cell(board))
+    val (board_moveA,players_updateA) = move(board,players,"A")
+    println(players_updateA)
+    display(board_moveA)
+
+
 
 //    def play(board:ArraySeq[ArraySeq[Any]],players: Map[String,(Int, Int)]): Unit = {
-//      if(check_win()){ print("end") return Unit}
-//      else{
-//          board_moveA = move(board,playerA))
-//          display(board_moveA)
-//          board_removeA = remove_cell(board_moveA))
-//          display(board_removeA)
 
-//          board_moveB = move(board_removeA,playerA))
-//          display(board_moveB)
-//          board_removeB = remove_cell(board_moveB))
-//          display(board_removeB)
-
-//          play(board_removeB,players)
-//      }
-//    }
-//      def move(board:ArraySeq[ArraySeq[Any]], posPlayer: (Int,Int)): ArraySeq[ArraySeq[Any]]={
+//        val (board_moveA,players_updateA) = move(board,players,"A")
+//        display(board_moveA)
+//        val board_removeA = remove_cell(board_moveA))
+//        display(board_removeA)
 //
+//        val (board_moveB,players_updateB) = move(board_removeA,player("B")))
+//        display(board_moveB)
+//        val board_removeB = remove_cell(board_moveB))
+//        display(board_removeB)
+//
+//        play(board_removeB,players_updateB)
 //    }
+
   }
 }
