@@ -1,6 +1,7 @@
 package scala
 
 import scala.collection.immutable.{ArraySeq, Map}
+import scala.collection.mutable.ListBuffer
 import scala.io.StdIn.readLine
 import scala.math.{ceil, floor}
 
@@ -14,29 +15,17 @@ object isolation_game {
       val board = ArraySeq.tabulate(x, y){
         case (a, b) =>
           if(y%2 == 0) {
-            if(a == 0 && b == y/2){
-              "B"
-            }
+            if(a == 0 && b == y/2){"B"}
             else{
-              if(a == x-1 && b == (y/2)-1){
-                "A"
-              }
-              else{
-                1
-              }
+              if(a == x-1 && b == (y/2)-1){"A"}
+              else{1}
             }
           }
           else{
-            if(a == 0 && b == y/2){
-              "B"
-            }
+            if(a == 0 && b == y/2){"B"}
             else{
-              if(a == x-1 && b == y/2){
-                "A"
-              }
-              else{
-                1
-              }
+              if(a == x-1 && b == y/2){"A"}
+              else{1}
             }
           }
 
@@ -114,22 +103,44 @@ object isolation_game {
       }
     }
     def play(board:ArraySeq[ArraySeq[Any]], players: Map[String,(Int, Int)]): Unit = {
-      val (board_moveA,players_updateA) = move(board,players,player = "A")
+      val playerA = "A"
+      val playerB = "B"
+      check_move(board,players,playerA)
+      val (board_moveA,players_updateA) = move(board,players,playerA)
       display(board_moveA)
-      val board_removeA = remove_cell(board_moveA,player="A")
+      val board_removeA = remove_cell(board_moveA,playerA)
       display(board_removeA)
-      val (board_moveB,players_updateB) = move(board_removeA,players_updateA,player="B")
+      check_move(board,players,playerB)
+      val (board_moveB,players_updateB) = move(board_removeA,players_updateA,playerB)
       display(board_moveB)
-      val board_removeB = remove_cell(board_moveB,player="B")
+      val board_removeB = remove_cell(board_moveB,playerB)
       display(board_removeB)
       play(board_removeB,players_updateB)
     }
 
     def check_move(board: ArraySeq[ArraySeq[Any]], players: Map[String, (Int, Int)], player: String): Unit = {
-      System.exit(1)
+      val x = players(player)._1
+      val y = players(player)._2
+      var bound_moves = ListBuffer[Any]()
+      for(i <- -1 to 1) {
+        for(j <- -1 to 1){
+          if( (x+i > -1) && (x+i <= board.length-1) && (y+j > -1) && (y+j <= board(0).length-1) ){
+            //print(i,j,x,y,x+i,y+j)
+            bound_moves += board(x+i)(y+j)
+          }
+        }
+      }
+      val moves = bound_moves.toList
+      if(moves.contains(1)){
+        println("continue")
+      }
+      else{
+        println("end")
+        System.exit(1)
+      }
     }
 
-    val (board,players) = initBoard((8,6))
+    val (board,players) = initBoard(pos("[2-9]"))
     println(players)
     display(board)
     play(board,players)
