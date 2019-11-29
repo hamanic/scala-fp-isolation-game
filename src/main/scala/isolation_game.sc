@@ -90,8 +90,9 @@ def pos(): (Int,Int) = {
   return (x,y)
 }
 
-val board = initBoard(8,6)
+val board = initBoard(3,3)
 display(board)
+print(board.length,board(0).length,3/2)
 
 //
 //def win(b:List[List[Any]]): Boolean ={

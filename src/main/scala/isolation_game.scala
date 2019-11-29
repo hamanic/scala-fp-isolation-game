@@ -67,8 +67,8 @@ object isolation_game {
     def remove_cell(board:ArraySeq[ArraySeq[Any]], player:String) : ArraySeq[ArraySeq[Any]]={
       print("Player "+player+" remove turn\n")
       val (x,y) = pos(limits="[0-9]")
-      if(y%2 == 0) {
-        if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2 - 1) || (x,y) == (0,board(0).length/2) ){
+      if(board(0).length%2 == 0) {
+        if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2 - 1) || (x,y) == (0,board(0).length/2)){
           print("Invalid cell selected\n")
           remove_cell(board,player)
         }
@@ -77,7 +77,7 @@ object isolation_game {
         }
       }
       else{
-        if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2) || (x,y) == (0,board(0).length/2) ){
+        if(board(x)(y) != 1 || (x,y) == (board.length-1,(board(0).length-1)/2) || (x,y) == (0,(board(0).length-1)/2) ){
           print("Invalid cell selected\n")
           remove_cell(board,player)
         }
@@ -146,11 +146,17 @@ object isolation_game {
         }
       }
       val moves = bound_moves.toList
+      //if 0 won
       if(moves.contains(1)){
-        println("continue")
+        //println("continue")
       }
       else{
-        println("end")
+        if(player == "A"){
+          println("player B won")
+        }
+        else{
+          println("player A won")
+        }
         System.exit(1)
       }
     }
