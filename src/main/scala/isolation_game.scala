@@ -47,7 +47,7 @@ object isolation_game {
     }
 
     def pos(limits:String): (Int,Int) = {
-      //print("Please select numbers between 4 and 9\n")
+      println("Please select numbers in range "+limits)
       val pattern = limits
       print("Row : ")
       val x = readLine()
@@ -120,49 +120,64 @@ object isolation_game {
     def play(board:ArraySeq[ArraySeq[Any]], players: Map[String,(Int, Int)]): Unit = {
       val playerA = "A"
       val playerB = "B"
-      check_move(board,players,playerA)
+
+      check_turn(board,players,playerA,move=true)
       val (board_moveA,players_updateA) = move(board,players,playerA)
       display(board_moveA)
+
+      check_turn(board_moveA,players_updateA,playerA,move=false)
       val board_removeA = remove_cell(board_moveA,playerA)
       display(board_removeA)
-      check_move(board,players,playerB)
+
+      check_turn(board_removeA,players_updateA,playerB,move=true)
       val (board_moveB,players_updateB) = move(board_removeA,players_updateA,playerB)
       display(board_moveB)
+
+      check_turn(board_moveB,players_updateB,playerB,move=false)
       val board_removeB = remove_cell(board_moveB,playerB)
       display(board_removeB)
+
       play(board_removeB,players_updateB)
     }
 
-    def check_move(board: ArraySeq[ArraySeq[Any]], players: Map[String, (Int, Int)], player: String): Unit = {
+    def check_turn(board: ArraySeq[ArraySeq[Any]], players: Map[String, (Int, Int)], player: String, move: Boolean): Unit = {
       val x = players(player)._1
       val y = players(player)._2
-      val bound_moves = ListBuffer[Any]()
+      val opponent = Map("A" -> "B", "B" -> "A")
+      val bound_moves = ListBuffer[Any]() //mutable list to add every available moves within bounds (example : left move -> (x-1,y+0) only if x-1 >= 0)
       for(i <- -1 to 1) {
         for(j <- -1 to 1){
-          if( (x+i > -1) && (x+i < board.length) && (y+j > -1) && (y+j < board(0).length) ){
-            //print(i,j,x,y,x+i,y+j)
-            bound_moves += board(x+i)(y+j)
+          if( (x+i > -1) && (x+i < board.length) && (y+j > -1) && (y+j < board(0).length) && ((i,j) != (0,0)) ){ //No out of bound moves + No staying in place move
+            if(board(x+i)(y+j) != opponent(player) && board(x+i)(y+j) != 0){ //can't move on opponent and can't move on removed cell
+              if(board(0).length%2 == 0){
+                if(!(!move && ((x+i,y+j) == (board.length-1,board(0).length/2 - 1) || (x+i,y+j) == (0,board(0).length/2)))) {
+                  bound_moves += board(x+i)(y+j)
+                }
+              }
+              else{
+                if(!(!move && ((x+i,y+j) == (board.length-1,(board(0).length-1)/2) || (x+i,y+j) == (0,(board(0).length-1)/2)))){
+                  bound_moves += board(x+i)(y+j)
+                }
+              }
+            }
           }
         }
       }
+
       val moves = bound_moves.toList
-      //if 0 won
-      if(moves.contains(1)){
-        //println("continue")
-      }
-      else{
-        if(player == "A"){
-          println("player B won")
+      //println("moves = ",moves.size,moves.length,moves)
+
+      if(!moves.contains(1)){
+        if(moves.isEmpty){
+          print("No allowed move available : ")
         }
-        else{
-          println("player A won")
-        }
+        println("Player "+opponent(player)+" won")
         System.exit(1)
       }
+
     }
 
-    val (board,players) = initBoard(pos("[2-9]"))
-    //println(players)
+    val (board,players) = initBoard(pos(limits="[2-9]"))
     display(board)
     play(board,players)
 
