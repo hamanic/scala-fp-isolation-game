@@ -3,7 +3,6 @@ package scala
 import scala.collection.immutable.{ArraySeq, Map}
 import scala.collection.mutable.ListBuffer
 import scala.io.StdIn.readLine
-import scala.math.{ceil, floor}
 
 object isolation_game {
   def main(args:Array[String]): Unit ={
@@ -31,7 +30,7 @@ object isolation_game {
 
       }
       if(y%2 == 0) {
-        val players = Map("A" -> (x-1,floor(y/2).toInt-1), "B" -> (0,ceil(y/2).toInt))
+        val players = Map("A" -> (x-1,y/2 - 1), "B" -> (0,y/2))
         return (board,players)
       }
       else{
@@ -39,12 +38,14 @@ object isolation_game {
         return (board,players)
       }
     }
+
     def display(board:ArraySeq[ArraySeq[Any]]): Unit ={
       println(".  "+List.range(0, board(0).size).mkString("   "))
       println(".  "+List.fill(board(0).size)("_").mkString("   "))
       //  println(board.map(_.mkString("   ")).mkString("\n"))
       board.zipWithIndex.foreach{ case(row, i) => println(i+" |"+row.mkString("   "));}
     }
+
     def pos(limits:String): (Int,Int) = {
       //print("Please select numbers between 4 and 9\n")
       val pattern = limits
@@ -62,16 +63,29 @@ object isolation_game {
       }
 
     }
+
     def remove_cell(board:ArraySeq[ArraySeq[Any]], player:String) : ArraySeq[ArraySeq[Any]]={
       print("Player "+player+" remove turn\n")
       val (x,y) = pos(limits="[0-9]")
-      if(board(x)(y) != 1 ){
-        print("Invalid cell selected\n")
-        remove_cell(board,player)
+      if(y%2 == 0) {
+        if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2 - 1) || (x,y) == (0,board(0).length/2) ){
+          print("Invalid cell selected\n")
+          remove_cell(board,player)
+        }
+        else{
+          return board.updated(x, board(x).updated(y, 0))
+        }
       }
       else{
-        return board.updated(x, board(x).updated(y, 0))
+        if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2) || (x,y) == (0,board(0).length/2) ){
+          print("Invalid cell selected\n")
+          remove_cell(board,player)
+        }
+        else{
+          return board.updated(x, board(x).updated(y, 0))
+        }
       }
+
     }
 
     def move(board:ArraySeq[ArraySeq[Any]], players:Map[String,(Int, Int)], player:String): (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)])={
@@ -102,6 +116,7 @@ object isolation_game {
         }
       }
     }
+
     def play(board:ArraySeq[ArraySeq[Any]], players: Map[String,(Int, Int)]): Unit = {
       val playerA = "A"
       val playerB = "B"
@@ -141,7 +156,7 @@ object isolation_game {
     }
 
     val (board,players) = initBoard(pos("[2-9]"))
-    println(players)
+    //println(players)
     display(board)
     play(board,players)
 
