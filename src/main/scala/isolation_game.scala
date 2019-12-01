@@ -8,8 +8,8 @@ object isolation_game {
   def main(args:Array[String]): Unit ={
 
     def initBoard (dim:(Int, Int)) : (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)]) = {
-      val x = dim._1 //8 rows
-      val y = dim._2 //6 cols
+      val x = dim._1
+      val y = dim._2
 
       val board = ArraySeq.tabulate(x, y){
         case (a, b) =>
@@ -55,7 +55,7 @@ object isolation_game {
       val y = readLine()
 
       if(!x.matches(pattern) || !y.matches(pattern)){
-        print("Wrong inputs\n")
+        println("Wrong inputs")
         pos(limits)
       }
       else{
@@ -65,11 +65,11 @@ object isolation_game {
     }
 
     def remove_cell(board:ArraySeq[ArraySeq[Any]], player:String) : ArraySeq[ArraySeq[Any]]={
-      print("Player "+player+" remove turn\n")
+      println("Player "+player+" remove turn")
       val (x,y) = pos(limits="[0-9]")
       if(board(0).length%2 == 0) {
         if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2 - 1) || (x,y) == (0,board(0).length/2)){
-          print("Invalid cell selected\n")
+          println("Invalid cell selected")
           remove_cell(board,player)
         }
         else{
@@ -121,23 +121,27 @@ object isolation_game {
       val playerA = "A"
       val playerB = "B"
 
+      //move turn for player A
       check_turn(board,players,playerA,move=true)
       val (board_moveA,players_updateA) = move(board,players,playerA)
       display(board_moveA)
 
+      //remove turn for player A
       check_turn(board_moveA,players_updateA,playerA,move=false)
       val board_removeA = remove_cell(board_moveA,playerA)
       display(board_removeA)
 
+      //move turn for player B
       check_turn(board_removeA,players_updateA,playerB,move=true)
       val (board_moveB,players_updateB) = move(board_removeA,players_updateA,playerB)
       display(board_moveB)
 
+      //remove turn for player B
       check_turn(board_moveB,players_updateB,playerB,move=false)
       val board_removeB = remove_cell(board_moveB,playerB)
       display(board_removeB)
 
-      play(board_removeB,players_updateB)
+      play(board_removeB,players_updateB) //next turn
     }
 
     def check_turn(board: ArraySeq[ArraySeq[Any]], players: Map[String, (Int, Int)], player: String, move: Boolean): Unit = {
@@ -169,14 +173,21 @@ object isolation_game {
 
       if(!moves.contains(1)){
         if(moves.isEmpty){
-          print("No allowed move available : ")
+          print("No allowed move left : ")
         }
         println("Player "+opponent(player)+" won")
         System.exit(1)
       }
 
     }
-
+    println("Welcome to the Isolation game. You are the player A and your goal is to isolate the player B\n" +
+      "You can choose the dimensions of the board (original game : 7x7).\n" +
+      "- Cells with a '1' mean an available cell and '0' mean an unavailable (removed) cell\n" +
+      "- A and B are the players\n" +
+      "- Each turn you move to a neighboring cell if it's available and then remove any cell of the board except the players and the starting cells of the players\n" +
+      "- The first player who can't play its turn loses (either can't move or remove a cell)\n" +
+      "Good luck !")
+    println("Choose dimensions of the board :")
     val (board,players) = initBoard(pos(limits="[2-9]"))
     display(board)
     play(board,players)
