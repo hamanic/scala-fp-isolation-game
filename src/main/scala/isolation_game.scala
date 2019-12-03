@@ -90,7 +90,6 @@ object isolation_game {
         else{
           return board_update(board,position=(x,y),piece=0)
         }
-
     }
 
     //get a new board with the piece (either players "A" and "B" or "1" or "0") on the chosen position
@@ -194,9 +193,8 @@ object isolation_game {
           print("No allowed move left : ")
         }
         println("Player "+opponent(player)+" won")
-        System.exit(1)
+        System.exit(0)
       }
-
     }
 
     println("Welcome to the Isolation game. You are the player A and your goal is to isolate the player B\n" +
@@ -207,7 +205,7 @@ object isolation_game {
       "- The first player who can't play its turn loses (either can't move or remove a cell)\n" +
       "Good luck !")
     println("Choose dimensions of the board :")
-    val (board,players) = initBoard(get_xy(correct_inputs="[2-9]",bounds=(10,10)))
+    val (board,players) = initBoard(get_xy(correct_inputs="[2-9]",bounds=(11,11)))
     display(board)
     play(board,players)
 
