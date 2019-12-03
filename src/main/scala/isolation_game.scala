@@ -25,7 +25,7 @@ object isolation_game {
             else{1}
           }
       }
-      //positions of the players into a map
+      //position of the players into a map
       if(y%2 == 0) {
         val players = Map("A" -> (x-1,y/2 - 1), "B" -> (0,y/2))
         return (board,players)
@@ -103,7 +103,7 @@ object isolation_game {
     def move(board:ArraySeq[ArraySeq[Any]], players_positions:Map[String,(Int, Int)], player:String): (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)])={
       print("Player "+player+" move turn\n")
 
-      val (selected_row,selected_col) = get_xy(correct_inputs="[0-9]|[1-9][0-9]",bounds=(board.length,board(0).length))
+      val (selected_row,selected_col) = get_xy(correct_inputs="[0-9]|[1-9][0-9]",bounds=(board.length,board(0).length)) //get position to move
 
       val player_row = players_positions(player)._1
       val player_col = players_positions(player)._2
@@ -167,6 +167,7 @@ object isolation_game {
       val y = players(player)._2
       val opponent = Map("A" -> "B", "B" -> "A")
       val bound_moves = ListBuffer[Any]() //mutable list to add every available moves within bounds (example : left move -> (x-1,y+0) only if x-1 >= 0)
+      //test every move
       for(i <- -1 to 1) {
         for(j <- -1 to 1){
           if( (x+i > -1) && (x+i < board.length) && (y+j > -1) && (y+j < board(0).length) && ((i,j) != (0,0)) ){ //No out of bound moves + No staying in place move
@@ -197,7 +198,7 @@ object isolation_game {
     }
 
     println("Welcome to the Isolation game. You are the player A and your goal is to isolate the player B\n" +
-      "You can choose the dimensions of the board up to 10x10 (original game : 7x7).\n" +
+      "You can choose the dimensions of the board up to 10x10 and at least 2x2 (original game : 7x7).\n" +
       "- Cells with a '1' mean an available cell and '0' mean an unavailable (removed) cell\n" +
       "- A and B are the players\n" +
       "- Each turn you move to a neighboring cell if it's available and then remove any cell of the board except the players and the starting cells of the players\n" +
