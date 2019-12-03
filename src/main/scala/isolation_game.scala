@@ -197,7 +197,7 @@ object isolation_game {
       }
     }
 
-    println("Welcome to the Isolation game. You are the player A and your goal is to isolate the player B\n" +
+    println("Welcome to the Isolation game. You are the player A and your goal is to isolate the player B.\n" +
       "You can choose the dimensions of the board up to 10x10 and at least 2x2 (original game : 7x7).\n" +
       "- Cells with a '1' mean an available cell and '0' mean an unavailable (removed) cell\n" +
       "- A and B are the players\n" +
