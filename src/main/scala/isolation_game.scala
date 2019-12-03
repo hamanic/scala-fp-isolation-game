@@ -72,7 +72,7 @@ object isolation_game {
     //remove one cell of the board within bounds and available cells (can't remove the players starting cells)
     def remove_cell(board:ArraySeq[ArraySeq[Any]], player:String) : ArraySeq[ArraySeq[Any]]={
       println("Player "+player+" remove turn")
-      val (x,y) = get_xy(correct_inputs="[0-9]",bounds=(board.length,board(0).length))
+      val (x,y) = get_xy(correct_inputs="[0-9]|[1-9][0-9]",bounds=(board.length,board(0).length))
       if(board(0).length%2 == 0) { //board columns is even
         if(board(x)(y) != 1 || (x,y) == (board.length-1,board(0).length/2 - 1) || (x,y) == (0,board(0).length/2)){ //if it's removing an unavailable cell (0) or the players starting cells
           println("Invalid cell selected")
@@ -103,7 +103,7 @@ object isolation_game {
     def move(board:ArraySeq[ArraySeq[Any]], players_positions:Map[String,(Int, Int)], player:String): (ArraySeq[ArraySeq[Any]],Map[String,(Int, Int)])={
       print("Player "+player+" move turn\n")
 
-      val (selected_row,selected_col) = get_xy(correct_inputs="[0-9]",bounds=(board.length,board(0).length))
+      val (selected_row,selected_col) = get_xy(correct_inputs="[0-9]|[1-9][0-9]",bounds=(board.length,board(0).length))
 
       val player_row = players_positions(player)._1
       val player_col = players_positions(player)._2
