@@ -24,7 +24,6 @@ object isolation_game {
             else if(a == x-1 && b == y/2){"A"}
             else{1}
           }
-
       }
       //positions of the players into a map
       if(y%2 == 0) {
@@ -205,7 +204,7 @@ object isolation_game {
       "- The first player who can't play its turn loses (either can't move or remove a cell)\n" +
       "Good luck !")
     println("Choose dimensions of the board :")
-    val (board,players) = initBoard(get_xy(correct_inputs="[2-9]",bounds=(11,11)))
+    val (board,players) = initBoard(get_xy(correct_inputs="[2-9]|[1-9][0-9]",bounds=(11,11)))
     display(board)
     play(board,players)
 
